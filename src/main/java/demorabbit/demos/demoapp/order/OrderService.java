@@ -38,6 +38,7 @@ public class OrderService {
     private RabbitAdmin rabbitAdmin;
 
     @RabbitListener(
+            containerFactory = "txRabbitListenerContainerFactory",
             bindings = @QueueBinding(
                 value = @org.springframework.amqp.rabbit.annotation.Queue(value="#{queues.order()}", durable = "true"),
                 exchange = @Exchange(value = "#{queues.exchange()}", durable = "true"),
@@ -51,6 +52,9 @@ public class OrderService {
 
         final Order order = Order.create(checkoutInfo.getId());
         orderRepository.save(order);
+
+        if (true)
+            throw new IllegalArgumentException();
 
         LOG.info("** ORDER CREATED:" + order);
         final OrderInfo orderInfo = new OrderInfo(order.getId(), order.getCheckoutRef(), order.getStatus(),

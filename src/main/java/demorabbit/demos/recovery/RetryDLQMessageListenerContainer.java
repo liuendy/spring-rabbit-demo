@@ -14,12 +14,16 @@ public class RetryDLQMessageListenerContainer extends SimpleMessageListenerConta
         /*
          * Configure the RetryOperationInterceptor to use the custom RetryAndDLQMessageRecovery
          */
-        final RetryAndDLQMessageRecovery messageRecovery = new RetryAndDLQMessageRecovery(getConnectionFactory(),
-                getQueueNames());
+//        final RetryAndDLQMessageRecovery messageRecovery = new RetryAndDLQMessageRecovery(getConnectionFactory(),
+//                getQueueNames());
+//
+//        messageRecovery.config()
+//                .setMaxRetry(3)
+//                .setRetryMultiplier(1.1f);
 
-        messageRecovery.config()
-                .setMaxRetry(3)
-                .setRetryMultiplier(1.1f);
+        final RetryOnQueueMessageRecovery messageRecovery = new RetryOnQueueMessageRecovery("test", getConnectionFactory());
+
+        messageRecovery.retry(50000, 5);
 
         final RetryOperationsInterceptor retryInterceptor = RetryInterceptorBuilder
                 .stateless()
