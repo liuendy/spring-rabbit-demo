@@ -8,22 +8,21 @@ import org.springframework.retry.interceptor.RetryOperationsInterceptor;
 /**
  * Created by mmoraes on 19/12/15.
  */
-public class RetryDLQMessageListenerContainer extends SimpleMessageListenerContainer {
+public class RetryOnQueueMessageListenerContainer extends SimpleMessageListenerContainer {
+    private final String retryQueuePrefix;
+    private final String deadletterExchange;
+
+    public RetryOnQueueMessageListenerContainer(final String retryQueuePrefix, final String deadletterExchange) {
+        this.retryQueuePrefix = retryQueuePrefix;
+        this.deadletterExchange = deadletterExchange;
+    }
     @Override
     public void start() {
-        /*
-         * Configure the RetryOperationInterceptor to use the custom RetryAndDLQMessageRecovery
-         */
-//        final RetryAndDLQMessageRecovery messageRecovery = new RetryAndDLQMessageRecovery(getConnectionFactory(),
-//                getQueueNames());
-//
-//        messageRecovery.config()
-//                .setMaxRetry(3)
-//                .setRetryMultiplier(1.1f);
+        final RetryOnQueueMessageRecovery messageRecovery =
+                new RetryOnQueueMessageRecovery(retryQueuePrefix, deadletterExchange, getConnectionFactory());
 
-        final RetryOnQueueMessageRecovery messageRecovery = new RetryOnQueueMessageRecovery("test", getConnectionFactory());
-
-        messageRecovery.retry(50000, 5);
+        messageRecovery.retry(5000, 2);
+        messageRecovery.retry(10000, 2);
 
         final RetryOperationsInterceptor retryInterceptor = RetryInterceptorBuilder
                 .stateless()

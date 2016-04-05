@@ -46,15 +46,11 @@ public class OrderService {
             )
     )
     @SendTo("demorabbit.app:orderEvents")
-    //@SendTo("#{routingKeys.orderCreated()}")
     @Transactional
     public OrderInfo create(final CheckoutInfo checkoutInfo) {
 
         final Order order = Order.create(checkoutInfo.getId());
         orderRepository.save(order);
-
-        if (true)
-            throw new IllegalArgumentException();
 
         LOG.info("** ORDER CREATED:" + order);
         final OrderInfo orderInfo = new OrderInfo(order.getId(), order.getCheckoutRef(), order.getStatus(),

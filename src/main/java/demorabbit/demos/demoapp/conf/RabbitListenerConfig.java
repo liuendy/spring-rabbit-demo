@@ -1,6 +1,6 @@
 package demorabbit.demos.demoapp.conf;
 
-import demorabbit.demos.recovery.RetryDLQRabbitListenerContainerFactory;
+import demorabbit.demos.recovery.RetryOnQueueRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListenerConfigurer;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -33,7 +33,7 @@ public class RabbitListenerConfig implements RabbitListenerConfigurer {
      */
     @Bean
     SimpleRabbitListenerContainerFactory txRabbitListenerContainerFactory() {
-        final RetryDLQRabbitListenerContainerFactory factory = new RetryDLQRabbitListenerContainerFactory();
+        final RetryOnQueueRabbitListenerContainerFactory factory = new RetryOnQueueRabbitListenerContainerFactory();
         factory.setConnectionFactory(connectionFactory);
         factory.setConcurrentConsumers(10);
         factory.setMessageConverter(new Jackson2JsonMessageConverter());
@@ -45,7 +45,7 @@ public class RabbitListenerConfig implements RabbitListenerConfigurer {
 
     @Bean
     SimpleRabbitListenerContainerFactory noTxRabbitListenerContainerFactory() {
-        final RetryDLQRabbitListenerContainerFactory factory = new RetryDLQRabbitListenerContainerFactory();
+        final RetryOnQueueRabbitListenerContainerFactory factory = new RetryOnQueueRabbitListenerContainerFactory();
         factory.setConnectionFactory(connectionFactory);
         factory.setConcurrentConsumers(10);
         factory.setMessageConverter(new Jackson2JsonMessageConverter());
