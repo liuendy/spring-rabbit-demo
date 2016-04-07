@@ -36,6 +36,7 @@ public class OrderService {
 
     @Autowired
     private RabbitAdmin rabbitAdmin;
+    private static Boolean error;
 
     @RabbitListener(
             containerFactory = "txRabbitListenerContainerFactory",
@@ -51,6 +52,10 @@ public class OrderService {
 
         final Order order = Order.create(checkoutInfo.getId());
         orderRepository.save(order);
+
+        if (error) {
+            throw new IllegalArgumentException();
+        }
 
         LOG.info("** ORDER CREATED:" + order);
         final OrderInfo orderInfo = new OrderInfo(order.getId(), order.getCheckoutRef(), order.getStatus(),
