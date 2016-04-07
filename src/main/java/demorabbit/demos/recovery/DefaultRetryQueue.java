@@ -8,20 +8,20 @@ import java.util.Map;
  */
 public class DefaultRetryQueue implements RetryQueue {
 
-    private String name;
+    private final String name;
     private String exchange;
     private Class<? extends Exception> cause;
-    private Integer maxAttempt;
+    private Integer maxRetry;
     private Integer retryTime;
 
 
 
-    public DefaultRetryQueue(String name, String exchange) {
+    public DefaultRetryQueue(final String name, final String exchange) {
         this.name = name;
         this.exchange = exchange;
     }
 
-    public DefaultRetryQueue(String name) {
+    public DefaultRetryQueue(final String name) {
         this.name = name;
     }
 
@@ -31,9 +31,9 @@ public class DefaultRetryQueue implements RetryQueue {
     }
 
     @Override
-    public boolean accept(RetryAttempt retry) {
-        boolean acceptCause = cause != null ? cause.isInstance(retry.getCause()) : true;
-        boolean acceptCounter = maxAttempt != null ? retry.getCounter(this) <= maxAttempt : true;
+    public boolean accept(final RetryAttempt retry) {
+        final boolean acceptCause = cause == null || cause.isInstance(retry.getCause());
+        final boolean acceptCounter = maxRetry == null || retry.getCounter(this) <= maxRetry;
         return acceptCause && acceptCounter;
     }
 
@@ -53,22 +53,22 @@ public class DefaultRetryQueue implements RetryQueue {
         return new DefaultRetryQueue(name);
     }
 
-    public DefaultRetryQueue exchange(String exchange) {
+    public DefaultRetryQueue exchange(final String exchange) {
         this.exchange = exchange;
         return this;
     }
 
-    public DefaultRetryQueue retryTime(int retryTime) {
+    public DefaultRetryQueue retryTime(final int retryTime) {
         this.retryTime = retryTime;
         return this;
     }
 
-    public DefaultRetryQueue maxRetry(int maxAttempt) {
-        this.maxAttempt = maxAttempt;
+    public DefaultRetryQueue maxRetry(final int maxRetry) {
+        this.maxRetry = maxRetry;
         return this;
     }
 
-    public DefaultRetryQueue causedBy(Class<? extends Exception> cause) {
+    public DefaultRetryQueue causedBy(final Class<? extends Exception> cause) {
         this.cause = cause;
         return this;
     }

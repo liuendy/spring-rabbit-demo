@@ -18,20 +18,20 @@ public class RetryOnQueueMessageListenerContainer extends SimpleMessageListenerC
     }
     @Override
     public void start() {
-        DefaultRetryQueue shortRetry = DefaultRetryQueue
+        final DefaultRetryQueue shortRetry = DefaultRetryQueue
                 .withName("demorabbit.app:retry:short")
                 .exchange(deadletterExchange)
                 .retryTime(10000)
                 .maxRetry(1);
-        DefaultRetryQueue longRetry = DefaultRetryQueue
+        final DefaultRetryQueue longRetry = DefaultRetryQueue
                 .withName("demorabbit.app:retry:long")
                 .exchange(deadletterExchange)
                 .retryTime(15000)
                 .maxRetry(1);
-        DefaultRetryQueue npeRetry = DefaultRetryQueue
+        final DefaultRetryQueue npeRetry = DefaultRetryQueue
                 .withName("demorabbit.app:retry:npe")
                 .causedBy(NullPointerException.class);
-        DefaultRetryQueue dlq = DefaultRetryQueue
+        final DefaultRetryQueue dlq = DefaultRetryQueue
                 .withName("demorabbit.app:retry:dlq");
 
         final RetryOnQueueMessageRecovery messageRecovery =

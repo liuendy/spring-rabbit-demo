@@ -23,11 +23,11 @@ public class RetryOnQueueMessageRecovery implements MessageRecoverer {
     private final RabbitTemplate rabbitTemplate;
     private final RabbitAdmin rabbitAdmin;
 
-    public RetryOnQueueMessageRecovery(final ConnectionFactory connectionFactory, RetryQueue... retryQueues) {
+    public RetryOnQueueMessageRecovery(final ConnectionFactory connectionFactory, final RetryQueue... retryQueues) {
         this.rabbitTemplate = createNoTxRabbitTemplate(connectionFactory);
         this.rabbitAdmin = new RabbitAdmin(connectionFactory);
         this.retryQueues = Arrays.asList(retryQueues);
-        this.retryQueues.forEach(q -> declareRetryQueue(q));
+        this.retryQueues.forEach(this::declareRetryQueue);
     }
 
 

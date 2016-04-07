@@ -11,7 +11,7 @@ public class RetryAttempt {
 
     public static final String RETRY_COUNTER = ".retry.counter";
     private final Message message;
-    private Throwable cause;
+    private final Throwable cause;
     private final Map<String, Object> headers;
 
     RetryAttempt(final Message message, final Throwable cause) {
